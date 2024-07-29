@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import StoryCard from './StoryCard';
 import SkeletonPlaceholder from './SkeletonPlaceholder';
 import ErrorMessage from './ErrorMessage';
+import Navbar from '../components/Navbar';
 
 const fetchTopStories = async () => {
   const response = await fetch('https://hn.algolia.com/api/v1/search?tags=front_page&hitsPerPage=100');
@@ -25,33 +26,36 @@ const Index = () => {
   ) || [];
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <header className="mb-8">
-        <h1 className="text-3xl font-bold text-center mb-4">Hacker News Top 100 Stories</h1>
-        <Input
-          type="text"
-          placeholder="Search stories..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full max-w-md mx-auto"
-        />
-      </header>
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+      <main className="flex-grow container mx-auto px-4 py-8">
+        <header className="mb-8">
+          <h1 className="text-3xl font-bold text-center mb-4">Hacker News Top 100 Stories</h1>
+          <Input
+            type="text"
+            placeholder="Search stories..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full max-w-md mx-auto"
+          />
+        </header>
 
-      {isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[...Array(9)].map((_, index) => (
-            <SkeletonPlaceholder key={index} />
-          ))}
-        </div>
-      ) : error ? (
-        <ErrorMessage message="Failed to fetch stories. Please try again later." />
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredStories.map((story) => (
-            <StoryCard key={story.objectID} story={story} />
-          ))}
-        </div>
-      )}
+        {isLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[...Array(9)].map((_, index) => (
+              <SkeletonPlaceholder key={index} />
+            ))}
+          </div>
+        ) : error ? (
+          <ErrorMessage message="Failed to fetch stories. Please try again later." />
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filteredStories.map((story) => (
+              <StoryCard key={story.objectID} story={story} />
+            ))}
+          </div>
+        )}
+      </main>
     </div>
   );
 };
